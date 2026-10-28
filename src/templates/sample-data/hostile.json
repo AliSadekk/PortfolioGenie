@@ -1,0 +1,29 @@
+
+{
+  "title": "Hostile Portfolio",
+  "template": "template1",
+  "profile": {
+    "fullName": "<img src=x onerror=alert(1)>",
+    "jobTitle": "Developer </h1><script>alert(1)</script>",
+    "bio": "Testing HTML injection: <b>bold</b> & \"quoted\" text.",
+    "email": "ahmed@example.com",
+    "github": "javascript:alert(1)",
+    "linkedin": "https://www.linkedin.com/in/example"
+  },
+  "skills": [
+    "C++",
+    "<script>alert('skill')</script>"
+  ],
+  "projects": [
+    {
+      "name": "<svg onload=alert(1)>",
+      "description": "Try to inject HTML: </p><img src=x onerror=alert(2)>",
+      "techStack": [
+        "JavaScript",
+        "<b>Injected</b>"
+      ],
+      "repoUrl": "javascript:alert(3)",
+      "liveUrl": "https://example.com"
+    }
+  ]
+}
