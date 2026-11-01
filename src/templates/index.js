@@ -1,24 +1,36 @@
 
+
 import { renderTemplate1 } from "./template1.js";
 
-export const TEMPLATES = {
-  template1: {
+export const TEMPLATES = [
+  {
     id: "template1",
     name: "Editorial",
-    render: renderTemplate1,
+    description: "Light, serif headings, printed-magazine feel.",
   },
-};
+  {
+    id: "template2",
+    name: "Terminal",
+    description: "Dark, monospace, developer feel.",
+  },
+];
 
 export function renderTemplate(data = {}) {
-  const templateId = data.template || "template1";
-  const template = TEMPLATES[templateId];
+  const requestedTemplate = TEMPLATES.find(
+    (template) => template.id === data.template
+  );
 
-  if (!template) {
-    throw new Error(`Unknown template: ${templateId}`);
+  // Template 2 لسه مش منفذ، فبنرجع للقالب الأول.
+  const selectedTemplate =
+    requestedTemplate?.id === "template1" ? requestedTemplate : null;
+
+  if (!selectedTemplate) {
+    return renderTemplate1(data);
   }
 
-  return template.render(data);
+  return renderTemplate1(data);
 }
+
 
 export function buildPreviewHtml(files) {
   let html = files["index.html"] || "";

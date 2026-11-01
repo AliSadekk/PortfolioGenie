@@ -4,42 +4,115 @@ import { escapeHtml, safeUrl } from "./escape.js";
 export function renderTemplate1(data = {}) {
   const profile = data.profile ?? {};
 
+  // Profile information
   const fullName = escapeHtml(profile.fullName || "Your Name");
   const jobTitle = escapeHtml(profile.jobTitle || "Your Profession");
   const bio = escapeHtml(profile.bio || "");
+
+  // Profile links
   const email = safeUrl(
     profile.email ? `mailto:${profile.email}` : ""
   );
+  const github = safeUrl(profile.github || "");
+  const linkedin = safeUrl(profile.linkedin || "");
 
+  // Skills and projects
   const skills = Array.isArray(data.skills) ? data.skills : [];
   const projects = Array.isArray(data.projects) ? data.projects : [];
 
+  // Render skills
   const skillsHtml = skills
     .filter((skill) => typeof skill === "string" && skill.trim())
     .map((skill) => `<li>${escapeHtml(skill)}</li>`)
     .join("");
 
+  // Render projects
   const projectsHtml = projects
-    .filter((project) => project && typeof project === "object")
+    .filter(
+      (project) =>
+        project &&
+        typeof project === "object" &&
+        !Array.isArray(project)
+    )
     .map((project) => {
       const name = escapeHtml(project.name || "Untitled Project");
       const description = escapeHtml(project.description || "");
+
+      // Project technologies
+      const techStack = Array.isArray(project.techStack)
+        ? project.techStack
+            .filter(
+              (tech) => typeof tech === "string" && tech.trim()
+            )
+            .map((tech) => escapeHtml(tech))
+        : [];
+
+      const techStackHtml = techStack.length
+        ? `<ul class="project-tech">${techStack
+            .map((tech) => `<li>${tech}</li>`)
+            .join("")}</ul>`
+        : "";
+
+      // Project links
       const repoUrl = safeUrl(project.repoUrl || "");
       const liveUrl = safeUrl(project.liveUrl || "");
 
       return `
         <article class="project">
           <h3>${name}</h3>
+
           ${description ? `<p>${description}</p>` : ""}
-          <div class="project-links">
-            ${repoUrl ? `<a href="${escapeHtml(repoUrl)}" target="_blank" rel="noopener noreferrer">Source code</a>` : ""}
-            ${liveUrl ? `<a href="${escapeHtml(liveUrl)}" target="_blank" rel="noopener noreferrer">Live demo</a>` : ""}
-          </div>
+
+          ${techStackHtml}
+
+          ${
+            repoUrl || liveUrl
+              ? `
+            <div class="project-links">
+              ${
+                repoUrl
+                  ? `<a href="${escapeHtml(repoUrl)}" target="_blank" rel="noopener noreferrer">Source code</a>`
+                  : ""
+              }
+              ${
+                liveUrl
+                  ? `<a href="${escapeHtml(liveUrl)}" target="_blank" rel="noopener noreferrer">Live demo</a>`
+                  : ""
+              }
+            </div>
+          `
+              : ""
+          }
         </article>
       `;
     })
     .join("");
 
+  // Render profile links only when available
+  const profileLinksHtml =
+    email || github || linkedin
+      ? `
+        <div class="profile-links">
+          ${
+            email
+              ? `<a href="${escapeHtml(email)}">Email</a>`
+              : ""
+          }
+          ${
+            github
+              ? `<a href="${escapeHtml(github)}" target="_blank" rel="noopener noreferrer">GitHub</a>`
+              : ""
+          }
+          ${
+            linkedin
+              ? `<a href="${escapeHtml(linkedin)}" target="_blank" rel="noopener noreferrer">LinkedIn</a>`
+              : ""
+          }
+        </div>
+      `
+      : "";
+
+  // HTML document
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,21 +134,33 @@ export function renderTemplate1(data = {}) {
       <p class="eyebrow">ABOUT ME</p>
       <h1 id="intro-title">${fullName}</h1>
       <p class="job-title">${jobTitle}</p>
+
       ${bio ? `<p class="bio">${bio}</p>` : ""}
-      ${email ? `<a class="contact-link" href="${escapeHtml(email)}">Get in touch</a>` : ""}
+
+      ${profileLinksHtml}
     </section>
 
-    ${skillsHtml ? `
+    ${
+      skillsHtml
+        ? `
     <section class="content-section" aria-labelledby="skills-title">
       <h2 id="skills-title">Skills</h2>
       <ul class="skills-list">${skillsHtml}</ul>
-    </section>` : ""}
+    </section>
+    `
+        : ""
+    }
 
-    ${projectsHtml ? `
+    ${
+      projectsHtml
+        ? `
     <section class="content-section" aria-labelledby="projects-title">
       <h2 id="projects-title">Selected Projects</h2>
       <div class="projects-list">${projectsHtml}</div>
-    </section>` : ""}
+    </section>
+    `
+        : ""
+    }
   </main>
 
   <footer class="site-footer">
@@ -84,6 +169,7 @@ export function renderTemplate1(data = {}) {
 </body>
 </html>`;
 
+  // CSS styles
   const css = `
 :root {
   color-scheme: light;
@@ -166,16 +252,18 @@ h1 {
   color: var(--muted);
 }
 
-.contact-link,
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.profile-links a,
 .project-links a {
   color: var(--brand);
   font-weight: 700;
   text-underline-offset: 4px;
-}
-
-.contact-link {
-  display: inline-block;
-  margin-top: 12px;
 }
 
 .content-section {
@@ -223,6 +311,23 @@ h2 {
 
 .project p {
   color: var(--muted);
+}
+
+.project-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-tech li {
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
 }
 
 .project-links {
