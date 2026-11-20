@@ -19,6 +19,7 @@ import TemplateStep from '../builder/TemplateStep';
 import ExportStep from '../builder/ExportStep';
 import PreviewPanel from '../builder/PreviewPanel';
 import SaveStatus from '../builder/SaveStatus';
+import ImportGithubDialog from '../builder/ImportGithubDialog';
 import { ArrowLeft, Eye, Edit3 } from 'lucide-react';
 
 const STEPS = ['profile', 'contacts', 'skills', 'projects', 'template', 'export'];
@@ -40,6 +41,7 @@ export default function Builder() {
   const stepIndex = Math.max(0, STEPS.indexOf(currentStep));
 
   const [mobileTab, setMobileTab] = useState('edit'); // 'edit' | 'preview'
+  const [githubOpen, setGithubOpen] = useState(false);
 
   const builder = useBuilder(id);
   const {
@@ -56,6 +58,7 @@ export default function Builder() {
     updateProject,
     removeProject,
     setTemplate,
+    applyImportedProjects,
     retrySave,
   } = builder;
 
@@ -116,6 +119,7 @@ export default function Builder() {
             addProject={addProject}
             updateProject={updateProject}
             removeProject={removeProject}
+            onOpenGithubImport={() => setGithubOpen(true)}
           />
         );
       case 'template':
@@ -248,6 +252,13 @@ export default function Builder() {
           </div>
         </div>
       </div>
+
+      <ImportGithubDialog
+        open={githubOpen}
+        onClose={() => setGithubOpen(false)}
+        projects={data?.projects || []}
+        applyImportedProjects={applyImportedProjects}
+      />
     </div>
   );
 }
