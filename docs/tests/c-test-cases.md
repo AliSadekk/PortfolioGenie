@@ -2,7 +2,7 @@
 
 "Script" rows were run with `node --test supabase/functions/github-import/github.test.mjs` (function logic, fake
 `fetch` plus two real calls to the public GitHub API without a token) and a Node test of `src/lib/github.js` with a fake
-Supabase client. Rows marked "Not run" need the deployed function, B's `github_cache` table, or a browser.
+Supabase client. "jsdom" rows rendered the dialog with D's components in a simulated browser (Vitest + Testing Library), with the function call routed to `github.ts` and the real GitHub API. Rows marked "Not run" need the deployed function, B's `github_cache` table, or a browser.
 
 | ID | Feature | Steps | Expected result | Actual result | Status | Tester | Date |
 |---|---|---|---|---|---|---|---|
@@ -40,3 +40,11 @@ Supabase client. Rows marked "Not run" need the deployed function, B's `github_c
 | C-32 | Import UI | Turn the network off (DevTools → Offline), import | "Could not connect…" + Retry; manual editing still works |  | Not run |  |  |
 | C-33 | Import UI | Keyboard only: Tab through the dialog, Enter in the field, Escape | Focus stays in the dialog, Enter imports, Escape closes |  | Not run |  |  |
 | C-34 | Browsers | Repeat C-26 and C-27 in Firefox | Same behaviour |  | Not run |  |  |
+| C-35 | Import UI (jsdom) | Dialog rendered with D's components; enter `-bad-`, press Import | Error under the field, function not called | As expected | Pass | C (script) | 2026-11-21 |
+| C-36 | Import UI (jsdom) | Enter `https://github.com/octocat` + Enter (real GitHub via `github.ts`) | Loading text, then list; contribution note shown; Add selected disabled until a repo is checked | As expected | Pass | C (script) | 2026-11-21 |
+| C-37 | Import UI (jsdom) | Check Hello-World, rename to "My Hello", Add selected | `applyImportedProjects` called once with `{ name: 'My Hello', description: 'My first repository on GitHub!', techStack: [], repoUrl: …/Hello-World, liveUrl: '' }` | As expected | Pass | C (script) | 2026-11-21 |
+| C-38 | Import UI (jsdom) | Reopen and import again | Hello-World shows "Already added", checkbox disabled | As expected | Pass | C (script) | 2026-11-21 |
+| C-39 | Import UI (jsdom) | 19 existing projects, Select all | "Only 1 more project fits", Add selected disabled | As expected | Pass | C (script) | 2026-11-21 |
+| C-40 | Import UI (jsdom) | Unknown username | USER_NOT_FOUND message and Retry button | As expected | Pass | C (script) | 2026-11-21 |
+| C-41 | Import UI (jsdom) | Fake client returns FunctionsFetchError (offline) | "Could not connect…" message | As expected | Pass | C (script) | 2026-11-21 |
+| C-42 | Integration | Merge A, B, D, E folders of "الجزء الاول" + branch `alaa`, `vite build` | Build passes | Passes only after adding a `src/pages/Home.jsx` (imported by D's `routes.jsx`, not delivered by anyone) | Fail | C (script) | 2026-11-21 |
