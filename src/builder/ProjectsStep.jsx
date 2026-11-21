@@ -3,6 +3,7 @@ import Input from '../components/Input';
 import Textarea from '../components/Textarea';
 import Label from '../components/Label';
 import Button from '../components/Button';
+import ErrorMessage from '../components/ErrorMessage';
 import { Plus, Trash2, ChevronDown, ChevronUp, ExternalLink, GitBranch } from 'lucide-react';
 
 const MAX_PROJECTS = 20;
@@ -15,6 +16,16 @@ export default function ProjectsStep({
   onOpenGithubImport,
 }) {
   const [expandedIndex, setExpandedIndex] = useState(projects.length > 0 ? 0 : null);
+  const [urlErrors, setUrlErrors] = useState({});
+
+  const validateUrl = (index, field, value) => {
+    const key = `${index}-${field}`;
+    if (value && !value.startsWith('https://')) {
+      setUrlErrors((prev) => ({ ...prev, [key]: 'URL must start with https://' }));
+    } else {
+      setUrlErrors((prev) => ({ ...prev, [key]: '' }));
+    }
+  };
 
   const handleAddProject = () => {
     if (projects.length >= MAX_PROJECTS) return;
@@ -147,9 +158,11 @@ export default function ProjectsStep({
                           type="url"
                           value={proj.repoUrl || ''}
                           onChange={(e) => updateProject(i, { repoUrl: e.target.value.slice(0, 300) })}
+                          onBlur={(e) => validateUrl(i, 'repo', e.target.value)}
                           placeholder="https://github.com/..."
                           maxLength={300}
                         />
+                        <ErrorMessage>{urlErrors[`${i}-repo`]}</ErrorMessage>
                       </div>
                       <div>
                         <Label htmlFor={`proj-live-${i}`}>Live Demo URL</Label>
@@ -158,9 +171,11 @@ export default function ProjectsStep({
                           type="url"
                           value={proj.liveUrl || ''}
                           onChange={(e) => updateProject(i, { liveUrl: e.target.value.slice(0, 300) })}
+                          onBlur={(e) => validateUrl(i, 'live', e.target.value)}
                           placeholder="https://example.com"
                           maxLength={300}
                         />
+                        <ErrorMessage>{urlErrors[`${i}-live`]}</ErrorMessage>
                       </div>
                     </div>
                   </div>
