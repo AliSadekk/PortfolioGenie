@@ -1,10 +1,3 @@
-/**
- * Builder page: multi-step form for building a portfolio.
- * Layout:
- * - On >= 1024px: form on left, PreviewPanel on right.
- * - On < 1024px: Edit | Preview toggle.
- * Owner: Member B (Builder page layout & navigation)
- */
 import { useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import useBuilder from '../hooks/useBuilder';
