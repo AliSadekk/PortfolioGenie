@@ -1,3 +1,11 @@
+import AppRoutes from './routes';
+
+export default function App() {
+  return <AppRoutes />;
+}
+
+/* 
+--- كود صفحة المعاينة بتاعك (معمول كومنت مؤقتاً) ---
 
 import { useMemo, useState } from "react";
 
@@ -26,7 +34,7 @@ const sampleData = {
   },
 };
 
-function App() {
+function EditorialPreview() {
   const [selectedSample, setSelectedSample] = useState("full");
 
   const currentSample = sampleData[selectedSample];
@@ -135,5 +143,4 @@ function App() {
     </main>
   );
 }
-
-export default App;
+*/
