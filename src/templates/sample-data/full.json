@@ -1,0 +1,43 @@
+
+{
+  "title": "Ahmed Ashraf Portfolio",
+  "template": "template1",
+  "profile": {
+    "fullName": "Ahmed Ashraf Hussein",
+    "jobTitle": "Junior Web Developer",
+    "bio": "Computer Science student interested in web development and building useful applications.",
+    "email": "ahmed@example.com",
+    "github": "https://github.com/ahmed",
+    "linkedin": "https://www.linkedin.com/in/ahmed"
+  },
+  "skills": [
+    "C++",
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "SQL"
+  ],
+  "projects": [
+    {
+      "name": "Library Management System",
+      "description": "A C++ application for managing books, borrowers, and library records.",
+      "techStack": [
+        "C++",
+        "File Handling"
+      ],
+      "repoUrl": "https://github.com/ahmed/library-system",
+      "liveUrl": ""
+    },
+    {
+      "name": "PortfolioGenie",
+      "description": "A portfolio builder that helps junior developers create personal portfolio websites.",
+      "techStack": [
+        "React",
+        "JavaScript",
+        "CSS"
+      ],
+      "repoUrl": "https://github.com/AliSadekk/PortfolioGenie",
+      "liveUrl": ""
+    }
+  ]
+}

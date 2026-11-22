@@ -1,0 +1,28 @@
+
+{
+  "title": "Partial Portfolio",
+  "template": "template1",
+  "profile": {
+    "fullName": "Sara Ali",
+    "jobTitle": "Student Developer",
+    "bio": "",
+    "email": "",
+    "github": "",
+    "linkedin": ""
+  },
+  "skills": [
+    "C++",
+    "HTML"
+  ],
+  "projects": [
+    {
+      "name": "First Project",
+      "description": "A simple learning project.",
+      "techStack": [
+        "C++"
+      ],
+      "repoUrl": "",
+      "liveUrl": ""
+    }
+  ]
+}
